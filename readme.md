@@ -50,6 +50,11 @@ e-Kelas ditujukan kepada Bapak/Ibu guru yang bertugas sebagai wali kelas. Dengan
 - Selesai.
 
 ## Screenshoots ##
+
+**Daftar Hadir**
+![Daftar Hadir](Assets/img/min/daftar-hadir.png)
+
+**Catatan Wali Kelas**
 ![Catatan Wali Kelas](/Assets/img/min/catatan-wali-kelas.png)
 
 ## Authors
