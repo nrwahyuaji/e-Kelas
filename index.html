@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="id">
+<!-- Info -->
+<!-- 
+     Pengembang: NR Wahyuaji
+     Script ini gratis dari github.com/nrwahyuaji
+     Dilarang memodifikasi untuk  diperjual-belikan!
+     Jika ada masukan silahkan hubungi saya.
+     Terimakasih
+-->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Siswa - SMA Negeri 1 Kalsel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .card-shadow {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .nav-active {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            transform: translateY(-2px);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hover-scale {
+            transition: transform 0.3s ease;
+        }
+
+        .hover-scale:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+    <!-- Login Page -->
+    <div id="loginPage" class="min-h-screen gradient-bg flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl card-shadow p-8 w-full max-w-md fade-in">
+            <div class="text-center mb-8">
+                <div
+                    class="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                    <i class="fas fa-graduation-cap text-4xl text-white"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Portal Siswa</h1>
+                <h2 class="text-xl text-gray-600 mb-1">SMA Negeri 1 Kalsel</h2>
+                <p class="text-sm text-gray-500 mt-3 px-4">Sistem Monitoring Kehadiran Siswa untuk Orang Tua dan Wali
+                    Murid</p>
+            </div>
+
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-3">
+                        <i class="fas fa-user mr-2 text-blue-500"></i>NISN (Username)
+                    </label>
+                    <input type="text" id="username"
+                        class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+                        placeholder="Masukkan NISN Anda" required>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-3">
+                        <i class="fas fa-lock mr-2 text-blue-500"></i>Password
+                    </label>
+                    <input type="password" id="password"
+                        class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+                        placeholder="Masukkan Password" required>
+                </div>
+
+                <button type="submit" id="loginBtn"
+                    class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 px-4 rounded-xl transition duration-200 flex items-center justify-center shadow-lg hover-scale">
+                    <i class="fas fa-sign-in-alt mr-2"></i>
+                    <span id="loginBtnText">Masuk ke Portal</span>
+                </button>
+            </form>
+
+            <div class="mt-8 text-center text-sm text-gray-500 bg-gray-50 p-4 rounded-xl">
+                <i class="fas fa-info-circle mr-2 text-blue-500"></i>
+                <p>Gunakan NISN sebagai username dan password yang telah diberikan oleh sekolah</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboard" class="hidden">
+        <!-- Header -->
+        <header class="bg-white shadow-lg border-b-2 border-blue-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center py-6">
+                    <div class="flex items-center">
+                        <div
+                            class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mr-4 shadow-lg">
+                            <i class="fas fa-school text-2xl text-white"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-900">SMA Negeri 1 Kalsel</h1>
+                            <p class="text-sm text-gray-600">Portal Monitoring Siswa Kelas X2</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="text-right">
+                            <p class="text-sm text-gray-600">Selamat datang,</p>
+                            <p class="font-semibold text-gray-800" id="studentName">Loading...</p>
+                        </div>
+                        <button onclick="logout()"
+                            class="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-6 py-3 rounded-xl text-sm transition duration-200 shadow-lg hover-scale">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Keluar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="bg-white shadow-md border-b">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex space-x-2">
+                    <button onclick="showPage('beranda')"
+                        class="nav-btn nav-active px-6 py-4 text-white rounded-t-xl font-semibold transition duration-200 shadow-lg">
+                        <i class="fas fa-home mr-2"></i>Beranda
+                    </button>
+                    <button onclick="showPage('dataMurid')"
+                        class="nav-btn px-6 py-4 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-t-xl font-semibold transition duration-200">
+                        <i class="fas fa-user-graduate mr-2"></i>Data Murid
+                    </button>
+                    <button onclick="showPage('kelas')"
+                        class="nav-btn px-6 py-4 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-t-xl font-semibold transition duration-200">
+                        <i class="fas fa-chalkboard-teacher mr-2"></i>Kelas
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Content Area -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Beranda Page -->
+            <div id="berandaPage" class="page-content fade-in">
+                <div class="bg-white rounded-2xl card-shadow p-8">
+                    <div class="text-center mb-10">
+                        <div
+                            class="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                            <i class="fas fa-bullhorn text-3xl text-white"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold text-gray-800 mb-4">Pengumuman</h2>
+                        <p class="text-gray-600">Informasi penting untuk orang tua dan wali murid</p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div
+                            class="bg-gradient-to-r from-blue-50 to-blue-100 border-l-4 border-blue-500 p-6 rounded-r-xl hover-scale">
+                            <div class="flex items-start">
+                                <div
+                                    class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mr-4 shadow-lg">
+                                    <i class="fas fa-info-circle text-white text-lg"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-blue-800 mb-3 text-lg">Informasi Portal</h3>
+                                    <p class="text-blue-700 leading-relaxed">Halaman ini memuat informasi keadaan murid
+                                        di kelas X2 untuk memudahkan monitoring perkembangan akademik dan kedisiplinan
+                                        siswa.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-gradient-to-r from-purple-50 to-purple-100 border-l-4 border-purple-500 p-6 rounded-r-xl hover-scale">
+                            <div class="flex items-start">
+                                <div
+                                    class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center mr-4 shadow-lg">
+                                    <i class="fas fa-eye text-white text-lg"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-purple-800 mb-3 text-lg">Tujuan Monitoring</h3>
+                                    <p class="text-purple-700 leading-relaxed">Halaman ini ditujukan untuk monitoring
+                                        orang tua atau wali murid agar dapat mengikuti perkembangan putra-putrinya di
+                                        sekolah secara real-time.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-gradient-to-r from-green-50 to-green-100 border-l-4 border-green-500 p-6 rounded-r-xl hover-scale">
+                            <div class="flex items-start">
+                                <div
+                                    class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mr-4 shadow-lg">
+                                    <i class="fab fa-whatsapp text-white text-lg"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-green-800 mb-3 text-lg">Kontak Wali Kelas</h3>
+                                    <p class="text-green-700 mb-4 leading-relaxed">Jika ada yang ingin ditanyakan
+                                        mengenai perkembangan putra-putri Anda, silakan hubungi wali kelas melalui
+                                        WhatsApp.</p>
+                                    <a href="https://wa.me/6281234567890" target="_blank"
+                                        class="inline-flex items-center bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-3 rounded-xl text-sm transition duration-200 shadow-lg hover-scale">
+                                        <i class="fab fa-whatsapp mr-2"></i>
+                                        Hubungi Wali Kelas
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Murid Page -->
+            <div id="dataMuridPage" class="page-content hidden fade-in">
+                <div class="bg-white rounded-2xl card-shadow">
+                    <!-- Tab Navigation -->
+                    <div class="border-b border-gray-200">
+                        <nav class="flex space-x-8 px-8 pt-6">
+                            <button onclick="showTab('kehadiran')"
+                                class="tab-btn tab-active py-4 px-2 border-b-3 border-blue-500 font-semibold text-blue-600 transition duration-200">
+                                <i class="fas fa-calendar-check mr-2"></i>Daftar Hadir
+                            </button>
+                            <button onclick="showTab('catatan')"
+                                class="tab-btn py-4 px-2 border-b-3 border-transparent font-semibold text-gray-500 hover:text-gray-700 transition duration-200">
+                                <i class="fas fa-sticky-note mr-2"></i>Catatan Wali Kelas
+                            </button>
+                            <button onclick="showTab('informasi')"
+                                class="tab-btn py-4 px-2 border-b-3 border-transparent font-semibold text-gray-500 hover:text-gray-700 transition duration-200">
+                                <i class="fas fa-id-card mr-2"></i>Informasi Murid
+                            </button>
+                        </nav>
+                    </div>
+
+                    <!-- Kehadiran Tab -->
+                    <div id="kehadiranTab" class="tab-content p-8">
+                        <div class="mb-8">
+                            <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                                <i class="fas fa-filter mr-3 text-blue-500"></i>Filter Periode Kehadiran
+                            </h3>
+                            <div class="flex flex-wrap gap-4">
+                                <select id="filterTahun"
+                                    class="px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
+                                    <option value="2025">2025</option>
+                                    <option value="2026">2026</option>
+                                </select>
+                                <select id="filterBulan"
+                                    class="px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
+                                    <option value="">Semua Bulan</option>
+                                    <option value="Juli">Juli</option>
+                                    <option value="Agustus">Agustus</option>
+                                    <option value="September">September</option>
+                                    <option value="Oktober">Oktober</option>
+                                    <option value="November">November</option>
+                                    <option value="Desember">Desember</option>
+                                    <option value="Januari">Januari</option>
+                                    <option value="Februari">Februari</option>
+                                    <option value="Maret">Maret</option>
+                                    <option value="April">April</option>
+                                    <option value="Mei">Mei</option>
+                                    <option value="Juni">Juni</option>
+                                </select>
+                                <button onclick="filterKehadiran()"
+                                    class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 rounded-xl transition duration-200 shadow-lg hover-scale">
+                                    <i class="fas fa-search mr-2"></i>Filter Data
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Statistik Kehadiran -->
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                            <div
+                                class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border-2 border-green-200 hover-scale">
+                                <div class="flex items-center">
+                                    <div
+                                        class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mr-4 shadow-lg">
+                                        <i class="fas fa-check-circle text-white text-lg"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-green-600 mb-1">Hadir</p>
+                                        <p class="text-2xl font-bold text-green-700" id="totalHadir">0</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-xl border-2 border-yellow-200 hover-scale">
+                                <div class="flex items-center">
+                                    <div
+                                        class="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center mr-4 shadow-lg">
+                                        <i class="fas fa-clock text-white text-lg"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-yellow-600 mb-1">Izin</p>
+                                        <p class="text-2xl font-bold text-yellow-700" id="totalIzin">0</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl border-2 border-blue-200 hover-scale">
+                                <div class="flex items-center">
+                                    <div
+                                        class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mr-4 shadow-lg">
+                                        <i class="fas fa-thermometer-half text-white text-lg"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-blue-600 mb-1">Sakit</p>
+                                        <p class="text-2xl font-bold text-blue-700" id="totalSakit">0</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-xl border-2 border-red-200 hover-scale">
+                                <div class="flex items-center">
+                                    <div
+                                        class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center mr-4 shadow-lg">
+                                        <i class="fas fa-times-circle text-white text-lg"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-red-600 mb-1">Alpha</p>
+                                        <p class="text-2xl font-bold text-red-700" id="totalAlpha">0</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Persentase Kehadiran -->
+                        <div
+                            class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-8 rounded-2xl mb-8 shadow-lg">
+                            <div class="text-center">
+                                <div
+                                    class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="fas fa-chart-pie text-2xl"></i>
+                                </div>
+                                <h4 class="text-xl font-bold mb-3">Persentase Kehadiran</h4>
+                                <div class="text-5xl font-bold mb-2" id="persentaseKehadiran">0%</div>
+                                <p class="text-blue-100">dari total hari efektif</p>
+                            </div>
+                        </div>
+
+                        <!-- Tabel Kehadiran -->
+                        <div class="bg-gray-50 rounded-2xl p-6">
+                            <h4 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                                <i class="fas fa-table mr-3 text-blue-500"></i>Detail Kehadiran per Bulan
+                            </h4>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full bg-white border border-gray-200 rounded-xl overflow-hidden">
+                                    <thead class="bg-gradient-to-r from-gray-50 to-gray-100">
+                                        <tr>
+                                            <th
+                                                class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                                                Tahun</th>
+                                            <th
+                                                class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                                                Bulan</th>
+                                            <th
+                                                class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                                                Hadir</th>
+                                            <th
+                                                class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                                                Izin</th>
+                                            <th
+                                                class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                                                Sakit</th>
+                                            <th
+                                                class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                                                Alpha</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="kehadiranTableBody" class="bg-white divide-y divide-gray-200">
+                                        <tr>
+                                            <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+                                                <div class="loading mx-auto mb-2"></div>
+                                                <p>Memuat data kehadiran...</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Catatan Tab -->
+                    <div id="catatanTab" class="tab-content hidden p-8">
+                        <div class="mb-8">
+                            <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                                <i class="fas fa-filter mr-3 text-blue-500"></i>Filter Catatan
+                            </h3>
+                            <div class="flex flex-wrap gap-4">
+                                <select id="filterTahunCatatan"
+                                    class="px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
+                                    <option value="2025">2025</option>
+                                    <option value="2026">2026</option>
+                                </select>
+                                <select id="filterBulanCatatan"
+                                    class="px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
+                                    <option value="">Semua Bulan</option>
+                                    <option value="Juli">Juli</option>
+                                    <option value="Agustus">Agustus</option>
+                                    <option value="September">September</option>
+                                    <option value="Oktober">Oktober</option>
+                                    <option value="November">November</option>
+                                    <option value="Desember">Desember</option>
+                                    <option value="Januari">Januari</option>
+                                    <option value="Februari">Februari</option>
+                                    <option value="Maret">Maret</option>
+                                    <option value="April">April</option>
+                                    <option value="Mei">Mei</option>
+                                    <option value="Juni">Juni</option>
+                                </select>
+                                <button onclick="filterCatatan()"
+                                    class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 rounded-xl transition duration-200 shadow-lg hover-scale">
+                                    <i class="fas fa-search mr-2"></i>Filter Catatan
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="space-y-6">
+                            <!-- Prestasi -->
+                            <div
+                                class="bg-gradient-to-r from-yellow-50 to-yellow-100 border-2 border-yellow-200 rounded-2xl p-6 hover-scale">
+                                <h4 class="text-xl font-bold text-yellow-800 mb-4 flex items-center">
+                                    <div
+                                        class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center mr-3 shadow-lg">
+                                        <i class="fas fa-trophy text-white"></i>
+                                    </div>
+                                    Prestasi
+                                </h4>
+                                <div id="prestasiContent" class="text-yellow-700 bg-white p-4 rounded-xl">
+                                    <div class="loading mx-auto mb-2"></div>
+                                    <p class="text-center">Memuat data prestasi...</p>
+                                </div>
+                            </div>
+
+                            <!-- Pelanggaran -->
+                            <div
+                                class="bg-gradient-to-r from-red-50 to-red-100 border-2 border-red-200 rounded-2xl p-6 hover-scale">
+                                <h4 class="text-xl font-bold text-red-800 mb-4 flex items-center">
+                                    <div
+                                        class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center mr-3 shadow-lg">
+                                        <i class="fas fa-exclamation-triangle text-white"></i>
+                                    </div>
+                                    Catatan Pelanggaran
+                                </h4>
+                                <div id="pelanggaranContent" class="text-red-700 bg-white p-4 rounded-xl">
+                                    <div class="loading mx-auto mb-2"></div>
+                                    <p class="text-center">Memuat catatan pelanggaran...</p>
+                                </div>
+                            </div>
+
+                            <!-- Catatan Wali Kelas -->
+                            <div
+                                class="bg-gradient-to-r from-blue-50 to-blue-100 border-2 border-blue-200 rounded-2xl p-6 hover-scale">
+                                <h4 class="text-xl font-bold text-blue-800 mb-4 flex items-center">
+                                    <div
+                                        class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mr-3 shadow-lg">
+                                        <i class="fas fa-user-tie text-white"></i>
+                                    </div>
+                                    Catatan Wali Kelas
+                                </h4>
+                                <div id="waliContent" class="text-blue-700 bg-white p-4 rounded-xl">
+                                    <div class="loading mx-auto mb-2"></div>
+                                    <p class="text-center">Memuat catatan wali kelas...</p>
+                                </div>
+                            </div>
+
+                            <!-- Catatan BK -->
+                            <div
+                                class="bg-gradient-to-r from-purple-50 to-purple-100 border-2 border-purple-200 rounded-2xl p-6 hover-scale">
+                                <h4 class="text-xl font-bold text-purple-800 mb-4 flex items-center">
+                                    <div
+                                        class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center mr-3 shadow-lg">
+                                        <i class="fas fa-user-friends text-white"></i>
+                                    </div>
+                                    Catatan BK
+                                </h4>
+                                <div id="bkContent" class="text-purple-700 bg-white p-4 rounded-xl">
+                                    <div class="loading mx-auto mb-2"></div>
+                                    <p class="text-center">Memuat catatan BK...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Informasi Tab -->
+                    <div id="informasiTab" class="tab-content hidden p-8">
+                        <div class="max-w-2xl mx-auto">
+                            <div class="text-center mb-10">
+                                <div
+                                    class="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                                    <i class="fas fa-user-graduate text-4xl text-white"></i>
+                                </div>
+                                <h3 class="text-3xl font-bold text-gray-800 mb-2">Informasi Siswa</h3>
+                                <p class="text-gray-600">Data lengkap siswa dan orang tua</p>
+                            </div>
+
+                            <div class="space-y-6">
+                                <div
+                                    class="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-2xl border-2 border-gray-200">
+                                    <label class="block text-sm font-bold text-gray-600 mb-2 flex items-center">
+                                        <i class="fas fa-user mr-2 text-blue-500"></i>Nama Lengkap
+                                    </label>
+                                    <p class="text-xl font-bold text-gray-800" id="infoNama">
+                                        <span class="loading inline-block mr-2"></span>Memuat...
+                                    </p>
+                                </div>
+
+                                <div
+                                    class="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-2xl border-2 border-gray-200">
+                                    <label class="block text-sm font-bold text-gray-600 mb-2 flex items-center">
+                                        <i class="fas fa-id-card mr-2 text-blue-500"></i>NISN
+                                    </label>
+                                    <p class="text-xl font-bold text-gray-800" id="infoNisn">
+                                        <span class="loading inline-block mr-2"></span>Memuat...
+                                    </p>
+                                </div>
+
+                                <div
+                                    class="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-2xl border-2 border-gray-200">
+                                    <label class="block text-sm font-bold text-gray-600 mb-2 flex items-center">
+                                        <i class="fas fa-users mr-2 text-blue-500"></i>Nama Orang Tua
+                                    </label>
+                                    <p class="text-xl font-bold text-gray-800" id="infoOrtu">
+                                        <span class="loading inline-block mr-2"></span>Memuat...
+                                    </p>
+                                </div>
+
+                                <div
+                                    class="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-2xl border-2 border-gray-200">
+                                    <label class="block text-sm font-bold text-gray-600 mb-2 flex items-center">
+                                        <i class="fas fa-phone mr-2 text-blue-500"></i>Nomor HP Orang Tua
+                                    </label>
+                                    <p class="text-xl font-bold text-gray-800" id="infoKontak">
+                                        <span class="loading inline-block mr-2"></span>Memuat...
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kelas Page -->
+            <div id="kelasPage" class="page-content hidden fade-in">
+                <div class="bg-white rounded-2xl card-shadow p-8">
+                    <div class="text-center mb-10">
+                        <div
+                            class="w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                            <i class="fas fa-chalkboard-teacher text-3xl text-white"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold text-gray-800 mb-4">Informasi Kelas</h2>
+                        <p class="text-gray-600">Data lengkap kelas X2 SMA Negeri 1 Kalsel</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                        <div
+                            class="bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200 rounded-2xl p-8 hover-scale">
+                            <div class="flex items-center mb-4">
+                                <div
+                                    class="w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center mr-4 shadow-lg">
+                                    <i class="fas fa-users text-white text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-blue-800">Jumlah Murid</h3>
+                            </div>
+                            <p class="text-4xl font-bold text-blue-700 mb-2">32</p>
+                            <p class="text-blue-600">siswa aktif</p>
+                        </div>
+
+                        <div
+                            class="bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-200 rounded-2xl p-8 hover-scale">
+                            <div class="flex items-center mb-4">
+                                <div
+                                    class="w-14 h-14 bg-green-500 rounded-full flex items-center justify-center mr-4 shadow-lg">
+                                    <i class="fas fa-door-open text-white text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-green-800">Ruang Kelas</h3>
+                            </div>
+                            <p class="text-4xl font-bold text-green-700 mb-2">X 2</p>
+                            <p class="text-green-600">lantai 2</p>
+                        </div>
+
+                        <div
+                            class="bg-gradient-to-br from-purple-50 to-purple-100 border-2 border-purple-200 rounded-2xl p-8 hover-scale">
+                            <div class="flex items-center mb-4">
+                                <div
+                                    class="w-14 h-14 bg-purple-500 rounded-full flex items-center justify-center mr-4 shadow-lg">
+                                    <i class="fas fa-user-tie text-white text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-purple-800">Wali Kelas</h3>
+                            </div>
+                            <p class="text-2xl font-bold text-purple-700 mb-2">Nur Rahmat</p>
+                            <p class="text-purple-600">S.Pd., M.Pd.</p>
+                        </div>
+
+                        <div
+                            class="bg-gradient-to-br from-orange-50 to-orange-100 border-2 border-orange-200 rounded-2xl p-8 hover-scale">
+                            <div class="flex items-center mb-4">
+                                <div
+                                    class="w-14 h-14 bg-orange-500 rounded-full flex items-center justify-center mr-4 shadow-lg">
+                                    <i class="fas fa-phone text-white text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-orange-800">No. Wali Kelas</h3>
+                            </div>
+                            <p class="text-2xl font-bold text-orange-700 mb-4">081234567890</p>
+                            <a href="https://wa.me/6281234567890" target="_blank"
+                                class="inline-flex items-center bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-3 rounded-xl text-sm transition duration-200 shadow-lg hover-scale">
+                                <i class="fab fa-whatsapp mr-2"></i>
+                                Hubungi via WhatsApp
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-gradient-to-r from-gray-800 to-gray-900 text-white py-12 mt-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <div
+                    class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                    <i class="fas fa-heart text-2xl text-white"></i>
+                </div>
+                <p class="text-gray-300 text-lg mb-2">Website dibuat tahun 2025</p>
+                <p class="text-gray-300 text-lg">Dibuat dengan ❤️ untuk masa depan pendidikan yang lebih baik</p>
+                <div class="mt-6 pt-6 border-t border-gray-700">
+                    <p class="text-gray-400 text-sm">© 2025 SMA Negeri 1 Kalsel. Portal Monitoring Siswa.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        const GOOGLE_APPS_SCRIPT_URL = "ISIKAN_URL_KAMU";
+
+        // Utility function to show loading state
+        function showLoading(elementId, message = "Memuat...") {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = `
+                    <div class="flex items-center justify-center">
+                        <div class="loading mr-2"></div>
+                        <span>${message}</span>
+                    </div>
+                `;
+            }
+        }
+
+        // Utility function to make API calls
+        async function makeAPICall(action, params = {}) {
+            try {
+                const url = new URL(GOOGLE_APPS_SCRIPT_URL);
+                url.searchParams.append('action', action);
+
+                Object.keys(params).forEach(key => {
+                    if (params[key] !== null && params[key] !== undefined && params[key] !== '') {
+                        url.searchParams.append(key, params[key]);
+                    }
+                });
+
+                console.log('Making API call:', url.toString());
+
+                const response = await fetch(url.toString());
+
+                if (!response.ok) {
+                    throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                console.log('API Response:', data);
+
+                if (!data.success) {
+                    throw new Error(data.message || 'Terjadi kesalahan pada server');
+                }
+
+                return data;
+            } catch (error) {
+                console.error('API Error:', error);
+                if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                    throw new Error('Tidak dapat terhubung ke server. Periksa koneksi internet Anda.');
+                }
+                throw error;
+            }
+        }
+
+        // Login functionality
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const loginBtn = document.getElementById('loginBtn');
+            const loginBtnText = document.getElementById('loginBtnText');
+
+            if (!username || !password) {
+                alert('NISN dan password harus diisi!');
+                return;
+            }
+
+            // Show loading state
+            loginBtn.disabled = true;
+            loginBtnText.innerHTML = '<div class="loading mr-2"></div>Memverifikasi...';
+
+            try {
+                const response = await makeAPICall('login', {
+                    nisn: username,
+                    password: password
+                });
+
+                currentUser = response.data;
+                document.getElementById('loginPage').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                document.getElementById('studentName').textContent = currentUser.nama || 'Siswa';
+
+                // Load initial data
+                await loadUserData();
+
+            } catch (error) {
+                alert('Login gagal: ' + error.message);
+            } finally {
+                loginBtn.disabled = false;
+                loginBtnText.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i>Masuk ke Portal';
+            }
+        });
+
+        // Navigation functionality
+        function showPage(page) {
+            // Hide all pages
+            document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden'));
+
+            // Remove active class from all nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('nav-active', 'text-white');
+                btn.classList.add('text-gray-600');
+            });
+
+            // Show selected page
+            document.getElementById(page + 'Page').classList.remove('hidden');
+
+            // Add active class to clicked button
+            event.target.classList.add('nav-active', 'text-white');
+            event.target.classList.remove('text-gray-600');
+
+            // Load page-specific data
+            if (page === 'dataMurid') {
+                loadKehadiranData();
+            }
+        }
+
+        // Tab functionality
+        function showTab(tab) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('tab-active', 'border-blue-500', 'text-blue-600');
+                btn.classList.add('border-transparent', 'text-gray-500');
+            });
+
+            // Show selected tab
+            document.getElementById(tab + 'Tab').classList.remove('hidden');
+
+            // Add active class to clicked button
+            event.target.classList.add('tab-active', 'border-blue-500', 'text-blue-600');
+            event.target.classList.remove('border-transparent', 'text-gray-500');
+
+            // Load tab-specific data
+            if (tab === 'kehadiran') {
+                loadKehadiranData();
+            } else if (tab === 'catatan') {
+                loadCatatanData();
+            } else if (tab === 'informasi') {
+                loadInformasiData();
+            }
+        }
+
+        // Load user-specific data
+        async function loadUserData() {
+            if (!currentUser) return;
+
+            try {
+                await Promise.all([
+                    loadKehadiranData(),
+                    loadInformasiData()
+                ]);
+            } catch (error) {
+                console.error('Error loading user data:', error);
+            }
+        }
+
+        // Load attendance data
+        async function loadKehadiranData() {
+            if (!currentUser) return;
+
+            // Show loading state
+            showLoading('kehadiranTableBody', 'Memuat data kehadiran...');
+            document.getElementById('totalHadir').textContent = '0';
+            document.getElementById('totalIzin').textContent = '0';
+            document.getElementById('totalSakit').textContent = '0';
+            document.getElementById('totalAlpha').textContent = '0';
+            document.getElementById('persentaseKehadiran').textContent = '0%';
+
+            try {
+                const tahun = document.getElementById('filterTahun')?.value || '2025';
+                const bulan = document.getElementById('filterBulan')?.value || '';
+
+                console.log('Loading kehadiran data with filters:', { nisn: currentUser.nisn, tahun, bulan });
+
+                const response = await makeAPICall('getKehadiran', {
+                    nisn: currentUser.nisn,
+                    tahun: tahun,
+                    bulan: bulan
+                });
+
+                console.log('Kehadiran response:', response);
+
+                if (response.data) {
+                    const kehadiran = response.data.kehadiran || response.data;
+                    const statistik = response.data.statistik || calculateStatistik(kehadiran);
+
+                    // Update statistics
+                    document.getElementById('totalHadir').textContent = statistik.totalHadir || 0;
+                    document.getElementById('totalIzin').textContent = statistik.totalIzin || 0;
+                    document.getElementById('totalSakit').textContent = statistik.totalSakit || 0;
+                    document.getElementById('totalAlpha').textContent = statistik.totalAlpha || 0;
+                    document.getElementById('persentaseKehadiran').textContent = (statistik.persentaseKehadiran || 0) + '%';
+
+                    // Update table
+                    updateKehadiranTable(kehadiran);
+                } else {
+                    updateKehadiranTable([]);
+                }
+
+            } catch (error) {
+                console.error('Error loading attendance data:', error);
+                document.getElementById('kehadiranTableBody').innerHTML = `
+                    <tr>
+                        <td colspan="6" class="px-6 py-8 text-center text-red-500">
+                            <i class="fas fa-exclamation-triangle text-2xl mb-2 block"></i>
+                            <p>Gagal memuat data: ${error.message}</p>
+                            <button onclick="loadKehadiranData()" class="mt-2 text-blue-600 hover:text-blue-800 underline">
+                                <i class="fas fa-redo mr-1"></i>Coba Lagi
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Calculate statistics from attendance data
+        function calculateStatistik(kehadiran) {
+            if (!Array.isArray(kehadiran)) return { totalHadir: 0, totalIzin: 0, totalSakit: 0, totalAlpha: 0, persentaseKehadiran: 0 };
+
+            const stats = kehadiran.reduce((acc, row) => {
+                acc.totalHadir += parseInt(row['j.khdrn'] || 0);
+                acc.totalIzin += parseInt(row.izin || 0);
+                acc.totalSakit += parseInt(row.sakit || 0);
+                acc.totalAlpha += parseInt(row.alpha || 0);
+                return acc;
+            }, { totalHadir: 0, totalIzin: 0, totalSakit: 0, totalAlpha: 0 });
+
+            const totalHari = stats.totalHadir + stats.totalIzin + stats.totalSakit + stats.totalAlpha;
+            stats.persentaseKehadiran = totalHari > 0 ? Math.round((stats.totalHadir / totalHari) * 100) : 0;
+
+            return stats;
+        }
+
+        // Update attendance table
+        function updateKehadiranTable(data) {
+            const tbody = document.getElementById('kehadiranTableBody');
+
+            if (!data || data.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+                            <i class="fas fa-info-circle text-2xl mb-2 block"></i>
+                            <p>Tidak ada data kehadiran untuk periode yang dipilih</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = '';
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50 transition duration-200';
+                tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">${row.tahun || '-'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">${row.bulan || '-'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-bold">${row['j.khdrn'] || 0}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-yellow-600 font-bold">${row.izin || 0}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 font-bold">${row.sakit || 0}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600 font-bold">${row.alpha || 0}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Filter attendance data
+        async function filterKehadiran() {
+            await loadKehadiranData();
+        }
+
+        // Load notes data
+        async function loadCatatanData() {
+            if (!currentUser) return;
+
+            // Show loading states
+            showLoading('prestasiContent', 'Memuat data prestasi...');
+            showLoading('pelanggaranContent', 'Memuat catatan pelanggaran...');
+            showLoading('waliContent', 'Memuat catatan wali kelas...');
+            showLoading('bkContent', 'Memuat catatan BK...');
+
+            try {
+                const tahun = document.getElementById('filterTahunCatatan')?.value || '2025';
+                const bulan = document.getElementById('filterBulanCatatan')?.value || '';
+
+                console.log('Loading catatan data with filters:', { nisn: currentUser.nisn, tahun, bulan });
+
+                // Use getKehadiran to get data from Kehadiran sheet which contains wali.prestasi and wali.pelanggaran columns
+                const response = await makeAPICall('getKehadiran', {
+                    nisn: currentUser.nisn,
+                    tahun: tahun,
+                    bulan: bulan
+                });
+
+                console.log('Catatan response from Kehadiran sheet:', response);
+
+                // Handle response data - get kehadiran data which contains the wali columns
+                let kehadiranData = response.data?.kehadiran || response.data || [];
+                if (!Array.isArray(kehadiranData)) {
+                    kehadiranData = [kehadiranData]; // Convert single object to array
+                }
+
+                console.log('Processing kehadiran data for catatan:', kehadiranData);
+
+                // Update prestasi - specifically from wali.prestasi column
+                const prestasiContent = document.getElementById('prestasiContent');
+                const prestasiItems = [];
+
+                kehadiranData.forEach(item => {
+                    // Get prestasi specifically from wali.prestasi column
+                    const prestasiText = item['wali.prestasi'] || '';
+                    console.log('Checking prestasi for', item.bulan, item.tahun, ':', prestasiText);
+
+                    if (prestasiText && prestasiText.trim() !== '' && prestasiText.trim() !== '-') {
+                        prestasiItems.push({
+                            text: prestasiText.trim(),
+                            bulan: item.bulan || 'Juli',
+                            tahun: item.tahun || '2025'
+                        });
+                    }
+                });
+
+                console.log('Found prestasi items:', prestasiItems);
+
+                if (prestasiItems.length > 0) {
+                    prestasiContent.innerHTML = prestasiItems.map(item => `
+                        <div class="mb-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-calendar mr-2 text-yellow-600"></i>
+                                <span class="font-semibold text-yellow-800">${item.bulan} ${item.tahun}</span>
+                            </div>
+                            <p class="text-yellow-700">${item.text}</p>
+                        </div>
+                    `).join('');
+                } else {
+                    prestasiContent.innerHTML = '<p class="text-center text-yellow-600"><i class="fas fa-info-circle mr-2"></i>Tidak ada data prestasi untuk periode yang dipilih.</p>';
+                }
+
+                // Update pelanggaran - specifically from wali.pelanggaran column
+                const pelanggaranContent = document.getElementById('pelanggaranContent');
+                const pelanggaranItems = [];
+
+                kehadiranData.forEach(item => {
+                    // Get pelanggaran specifically from wali.pelanggaran column
+                    const pelanggaranText = item['wali.pelanggaran'] || '';
+                    console.log('Checking pelanggaran for', item.bulan, item.tahun, ':', pelanggaranText);
+
+                    if (pelanggaranText && pelanggaranText.trim() !== '' && pelanggaranText.trim() !== '-') {
+                        pelanggaranItems.push({
+                            text: pelanggaranText.trim(),
+                            bulan: item.bulan || 'Juli',
+                            tahun: item.tahun || '2025'
+                        });
+                    }
+                });
+
+                console.log('Found pelanggaran items:', pelanggaranItems);
+
+                if (pelanggaranItems.length > 0) {
+                    pelanggaranContent.innerHTML = pelanggaranItems.map(item => `
+                        <div class="mb-3 p-3 bg-red-50 rounded-lg border border-red-200">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-calendar mr-2 text-red-600"></i>
+                                <span class="font-semibold text-red-800">${item.bulan} ${item.tahun}</span>
+                            </div>
+                            <p class="text-red-700">${item.text}</p>
+                        </div>
+                    `).join('');
+                } else {
+                    pelanggaranContent.innerHTML = '<p class="text-center text-red-600"><i class="fas fa-check-circle mr-2"></i>Tidak ada catatan pelanggaran untuk periode yang dipilih.</p>';
+                }
+
+                // Update catatan wali - from wali.catatan column
+                const waliContent = document.getElementById('waliContent');
+                const waliItems = [];
+
+                kehadiranData.forEach(item => {
+                    // Get catatan wali from wali.catatan column
+                    const waliText = item['wali.catatan'] || '';
+                    console.log('Checking wali catatan for', item.bulan, item.tahun, ':', waliText);
+
+                    if (waliText && waliText.trim() !== '' && waliText.trim() !== '-') {
+                        waliItems.push({
+                            text: waliText.trim(),
+                            bulan: item.bulan || 'Juli',
+                            tahun: item.tahun || '2025'
+                        });
+                    }
+                });
+
+                console.log('Found wali items:', waliItems);
+
+                if (waliItems.length > 0) {
+                    waliContent.innerHTML = waliItems.map(item => `
+                        <div class="mb-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-calendar mr-2 text-blue-600"></i>
+                                <span class="font-semibold text-blue-800">${item.bulan} ${item.tahun}</span>
+                            </div>
+                            <p class="text-blue-700">${item.text}</p>
+                        </div>
+                    `).join('');
+                } else {
+                    waliContent.innerHTML = '<p class="text-center text-blue-600"><i class="fas fa-info-circle mr-2"></i>Tidak ada catatan wali kelas untuk periode yang dipilih.</p>';
+                }
+
+                // Update catatan BK - from bk.catatan column
+                const bkContent = document.getElementById('bkContent');
+                const bkItems = [];
+
+                kehadiranData.forEach(item => {
+                    // Get catatan BK from bk.catatan column
+                    const bkText = item['bk.catatan'] || '';
+                    console.log('Checking BK catatan for', item.bulan, item.tahun, ':', bkText);
+
+                    if (bkText && bkText.trim() !== '' && bkText.trim() !== '-') {
+                        bkItems.push({
+                            text: bkText.trim(),
+                            bulan: item.bulan || 'Juli',
+                            tahun: item.tahun || '2025'
+                        });
+                    }
+                });
+
+                console.log('Found BK items:', bkItems);
+
+                if (bkItems.length > 0) {
+                    bkContent.innerHTML = bkItems.map(item => `
+                        <div class="mb-3 p-3 bg-purple-50 rounded-lg border border-purple-200">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-calendar mr-2 text-purple-600"></i>
+                                <span class="font-semibold text-purple-800">${item.bulan} ${item.tahun}</span>
+                            </div>
+                            <p class="text-purple-700">${item.text}</p>
+                        </div>
+                    `).join('');
+                } else {
+                    bkContent.innerHTML = '<p class="text-center text-purple-600"><i class="fas fa-info-circle mr-2"></i>Tidak ada catatan BK untuk periode yang dipilih.</p>';
+                }
+
+            } catch (error) {
+                console.error('Error loading notes data:', error);
+
+                // Show error messages in each section
+                const errorMessage = `
+                    <div class="text-center text-red-500">
+                        <i class="fas fa-exclamation-triangle text-2xl mb-2 block"></i>
+                        <p>Gagal memuat data: ${error.message}</p>
+                        <button onclick="loadCatatanData()" class="mt-2 text-blue-600 hover:text-blue-800 underline">
+                            <i class="fas fa-redo mr-1"></i>Coba Lagi
+                        </button>
+                    </div>
+                `;
+
+                document.getElementById('prestasiContent').innerHTML = errorMessage;
+                document.getElementById('pelanggaranContent').innerHTML = errorMessage;
+                document.getElementById('waliContent').innerHTML = errorMessage;
+                document.getElementById('bkContent').innerHTML = errorMessage;
+            }
+        }
+
+        // Filter notes data
+        async function filterCatatan() {
+            await loadCatatanData();
+        }
+
+        // Load student information
+        async function loadInformasiData() {
+            if (!currentUser) return;
+
+            try {
+                const response = await makeAPICall('getInfoSiswa', {
+                    nisn: currentUser.nisn
+                });
+
+                const info = response.data;
+
+                document.getElementById('infoNama').textContent = info.nama || '-';
+                document.getElementById('infoNisn').textContent = info.nisn || '-';
+                document.getElementById('infoOrtu').textContent = info.ortu || '-';
+                document.getElementById('infoKontak').textContent = info.kontakOrtu || '-';
+
+            } catch (error) {
+                console.error('Error loading student info:', error);
+                document.getElementById('infoNama').textContent = 'Error memuat data';
+                document.getElementById('infoNisn').textContent = 'Error memuat data';
+                document.getElementById('infoOrtu').textContent = 'Error memuat data';
+                document.getElementById('infoKontak').textContent = 'Error memuat data';
+            }
+        }
+
+        // Logout functionality
+        function logout() {
+            if (confirm('Apakah Anda yakin ingin keluar dari portal?')) {
+                // Reset user data
+                currentUser = null;
+
+                // Hide dashboard and show login page
+                document.getElementById('dashboard').classList.add('hidden');
+                document.getElementById('loginPage').classList.remove('hidden');
+
+                // Clear login form
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+
+                // Reset navigation to default (Beranda)
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.classList.remove('nav-active', 'text-white');
+                    btn.classList.add('text-gray-600');
+                });
+                document.querySelector('[onclick="showPage(\'beranda\')"]').classList.add('nav-active', 'text-white');
+                document.querySelector('[onclick="showPage(\'beranda\')"]').classList.remove('text-gray-600');
+
+                // Reset tabs to default (Kehadiran)
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('tab-active', 'border-blue-500', 'text-blue-600');
+                    btn.classList.add('border-transparent', 'text-gray-500');
+                });
+                document.querySelector('[onclick="showTab(\'kehadiran\')"]').classList.add('tab-active', 'border-blue-500', 'text-blue-600');
+                document.querySelector('[onclick="showTab(\'kehadiran\')"]').classList.remove('border-transparent', 'text-gray-500');
+
+                // Show default page and tab
+                document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden'));
+                document.getElementById('berandaPage').classList.remove('hidden');
+
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+                document.getElementById('kehadiranTab').classList.remove('hidden');
+
+                // Reset all data displays to loading state
+                document.getElementById('studentName').textContent = 'Loading...';
+                document.getElementById('totalHadir').textContent = '0';
+                document.getElementById('totalIzin').textContent = '0';
+                document.getElementById('totalSakit').textContent = '0';
+                document.getElementById('totalAlpha').textContent = '0';
+                document.getElementById('persentaseKehadiran').textContent = '0%';
+
+                // Reset tables and content areas
+                document.getElementById('kehadiranTableBody').innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-gray-500"><div class="loading mx-auto mb-2"></div><p>Memuat data kehadiran...</p></td></tr>';
+
+                document.getElementById('prestasiContent').innerHTML = '<div class="loading mx-auto mb-2"></div><p class="text-center">Memuat data prestasi...</p>';
+                document.getElementById('pelanggaranContent').innerHTML = '<div class="loading mx-auto mb-2"></div><p class="text-center">Memuat catatan pelanggaran...</p>';
+                document.getElementById('waliContent').innerHTML = '<div class="loading mx-auto mb-2"></div><p class="text-center">Memuat catatan wali kelas...</p>';
+                document.getElementById('bkContent').innerHTML = '<div class="loading mx-auto mb-2"></div><p class="text-center">Memuat catatan BK...</p>';
+
+                document.getElementById('infoNama').innerHTML = '<span class="loading inline-block mr-2"></span>Memuat...';
+                document.getElementById('infoNisn').innerHTML = '<span class="loading inline-block mr-2"></span>Memuat...';
+                document.getElementById('infoOrtu').innerHTML = '<span class="loading inline-block mr-2"></span>Memuat...';
+                document.getElementById('infoKontak').innerHTML = '<span class="loading inline-block mr-2"></span>Memuat...';
+
+                // Reset filters to default
+                document.getElementById('filterTahun').value = '2025';
+                document.getElementById('filterTahunCatatan').value = '2025';
+                document.getElementById('filterBulan').value = '';
+                document.getElementById('filterBulanCatatan').value = '';
+
+                console.log('User logged out successfully');
+            }
+        }
+
+        // Initialize default filters
+        document.addEventListener('DOMContentLoaded', function () {
+            // Set default values to match sample data
+            document.getElementById('filterTahun').value = '2025';
+            document.getElementById('filterTahunCatatan').value = '2025';
+            document.getElementById('filterBulan').value = 'Juli';
+            document.getElementById('filterBulanCatatan').value = 'Juli';
+        });
+
+        // Add error handling for network issues
+        window.addEventListener('online', function () {
+            console.log('Connection restored');
+        });
+
+        window.addEventListener('offline', function () {
+            alert('Koneksi internet terputus. Beberapa fitur mungkin tidak berfungsi.');
+        });
+    </script>
+    <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'9741b017a6914ab7',t:'MTc1NjAyNjMyNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
+</body>
+
+</html>
