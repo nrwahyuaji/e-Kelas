@@ -50,7 +50,7 @@ e-Kelas ditujukan kepada Bapak/Ibu guru yang bertugas sebagai wali kelas. Dengan
 - Selesai.
 
 ## Screenshoots ##
-(Assets/img/min/catatan-wali-kelas.png)
+[Catatan Wali Kelas](/Assets/img/min/catatan-wali-kelas.png)
 
 ## Authors
 
