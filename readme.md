@@ -48,6 +48,10 @@ e-Kelas ditujukan kepada Bapak/Ibu guru yang bertugas sebagai wali kelas. Dengan
 - Cari kode `const GOOGLE_APPS_SCRIPT_URL = "ISIKAN_URL_KAMU";`
 - Pada bagian `ISIKAN_URL_KAMU` ganti dengan URL AppScript Spreadsheet yang tadi kamu copy.
 - Selesai.
+
+## Screenshoots ##
+(Assets/img/min/catatan-wali-kelas.png)
+
 ## Authors
 
 - [@nrwahyuaji](https://www.github.com/nrwahyuaji)
